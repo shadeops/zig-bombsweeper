@@ -6,8 +6,8 @@ const ray = @cImport({
 
 const num_bombs = 50;
 const square_size = 25;
-const board_size_x = 20;
-const board_size_y = 20;
+const board_size_x = 25;
+const board_size_y = 15;
 const board_size = board_size_x * board_size_y;
 
 const PositionState = struct {
@@ -51,7 +51,7 @@ const GameBoard = struct {
 
         for (board.neighbouring_bombs) |*val, idx| {
             var x = idx % board_size_x;
-            var y = @divFloor(idx, board_size_y);
+            var y = @divFloor(idx, board_size_x);
 
             // corners
             if (x == 0 and y == 0) {
@@ -136,7 +136,7 @@ const GameBoard = struct {
 
     fn revealNeighbours(self: *GameBoard, idx: usize) void {
         var x = idx % board_size_x;
-        var y = @divFloor(idx, board_size_y);
+        var y = @divFloor(idx, board_size_x);
 
         // corners
         if (x == 0 and y == 0) {
@@ -202,7 +202,7 @@ const GameBoard = struct {
 
 fn indexToBox(idx: usize) ray.Rectangle {
     var x = idx % board_size_x;
-    var y = @divFloor(idx, board_size_y);
+    var y = @divFloor(idx, board_size_x);
 
     return ray.Rectangle{
         .x = @intToFloat(f32, x * square_size),
@@ -238,7 +238,7 @@ fn interact(board: *GameBoard) void {
 fn drawBoard(board: GameBoard) !void {
     for (board.positions) |pos, i| {
         var x: i32 = @intCast(i32, i % board_size_x);
-        var y: i32 = @intCast(i32, @divFloor(i, board_size_y));
+        var y: i32 = @intCast(i32, @divFloor(i, board_size_x));
 
         // color squares first
         if (!pos.is_visible) {
